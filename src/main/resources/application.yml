@@ -1,0 +1,40 @@
+server:
+  port: 8082
+  servlet:
+    encoding:
+      charset: UTF-8
+    session:
+      timeout: 10m
+      cookie:
+        http-only: false
+        same-site: none
+
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+  data:
+    jdbc:
+      repositories:
+        enabled: false
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 50MB
+
+  redis:
+    host: localhost
+    port: 6101
+
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+
+  profiles:
+    default: local
+
+logging:
+  level:
+    root: info
