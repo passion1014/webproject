@@ -38,3 +38,7 @@ spring:
 logging:
   level:
     root: info
+
+security:
+  basic:
+    enabled: false
