@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class HelloWorldServiceImpl implements HelloWorldService {
     @Override
     public String getGreeting(String name) {
-        return "hello word! " + name + "님 안녕하세요.";
+        return "hello world! " + name + "님 안녕하세요.";
     }
 }
 
