@@ -21,4 +21,8 @@ public class TestInfo {
     @Column(length = 200)
     private String name;
 
+    @NotNull
+    @Column()
+    private Long age;
+
 }
