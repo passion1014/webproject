@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class TestController {
@@ -19,6 +20,14 @@ public class TestController {
     public String hello(@PathVariable("name") String name, Model model) {
         // return helloWorldService.getGreeting(name);
         model.addAttribute("data", name);
+
         return "test/hello";
+    }
+
+    @GetMapping("/redirect/test")
+    public String redirectTest (RedirectAttributes attributes) {
+
+        attributes.addFlashAttribute("flashAttr", "이성욱");
+        return "redirect:/test/hello";
     }
 }
