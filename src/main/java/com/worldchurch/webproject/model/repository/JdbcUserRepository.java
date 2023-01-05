@@ -1,25 +1,24 @@
-package com.worldchurch.webproject.test.repository;
+package com.worldchurch.webproject.model.repository;
 
-import com.worldchurch.webproject.test.dto.User;
+import com.worldchurch.webproject.model.entity.UserInfo;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.Optional;
 
 @Repository
-public class JdbcUserRepository implements UserRepository{
+public class JdbcUserRepository implements UserRepository {
     private final DataSource dataSource;
-    private User user;
+    private UserInfo userInfo;
 
     public JdbcUserRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
-    public void save(User user) {
-        String sql = "insert into User(userId, pwd, name) values (?, ?, ?)";
+    public UserInfo save(UserInfo userInfo) {
+        String sql = "insert into UserInfo(userId, password, name, email, phoneNo, birthDt) values (?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -27,16 +26,21 @@ public class JdbcUserRepository implements UserRepository{
         try {
             conn = DataSourceUtils.getConnection(dataSource);
             pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1, user.getUserId());
-            pstmt.setString(2, user.getPwd());
-            pstmt.setString(3, user.getName());
+            pstmt.setString(1, userInfo.getUserId());
+            pstmt.setString(2, userInfo.getPassword());
+            pstmt.setString(3, userInfo.getName());
+            pstmt.setString(4, userInfo.getEmail());
+            pstmt.setString(5, userInfo.getPhoneNo());
+            pstmt.setString(6, userInfo.getBirthDt());
 
             pstmt.executeUpdate();
             rs = pstmt.getGeneratedKeys();
 
             if (rs.next()) {
-
+                //id 정보 추가?
+                userInfo.setId(rs.getLong(1));
             } else {
+                //Exception이 발생하면 어떻게 처리해야 하는지?
                 throw new SQLException("저장 실패");
             }
         } catch (Exception e) {
@@ -44,11 +48,15 @@ public class JdbcUserRepository implements UserRepository{
         } finally {
             close(conn, pstmt, rs);
         }
+
+        return userInfo;
     }
 
     @Override
-    public Optional<User> getUserByUserId(String userId) {
-        String sql = "select userId, pwd, name from user where userId = ?";
+    public UserInfo findByUserId(String userId) {
+        //userInfo 초기화?
+
+        String sql = "select userId, password, name, email, phoneNo, birthDt from UserInfo where userId = ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -61,11 +69,15 @@ public class JdbcUserRepository implements UserRepository{
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                user.setUserId(rs.getString("userId"));
-                user.setPwd(rs.getString("pwd"));
-                user.setName(rs.getString("name"));
+                userInfo.setUserId(rs.getString("userId"));
+                userInfo.setPassword(rs.getString("password"));
+                userInfo.setName(rs.getString("name"));
+                userInfo.setEmail(rs.getString("email"));
+                userInfo.setPhoneNo(rs.getString("phoneNo"));
+                userInfo.setBirthDt(rs.getString("birthDt"));
+
             } else {
-                throw new SQLException("저장 실패");
+                throw new SQLException("조회 실패");
             }
         } catch (Exception e) {
 
@@ -73,7 +85,7 @@ public class JdbcUserRepository implements UserRepository{
             close(conn, pstmt, rs);
         }
 
-        return Optional.of(user);
+        return userInfo;
     }
 
     private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
