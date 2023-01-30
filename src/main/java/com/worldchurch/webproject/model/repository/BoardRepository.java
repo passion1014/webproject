@@ -1,11 +1,12 @@
 package com.worldchurch.webproject.model.repository;
 
-import com.worldchurch.webproject.model.entity.UserInfo;
+import com.worldchurch.webproject.model.entity.Board;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserInfoRepository extends JpaRepository<UserInfo, Long> {
-    UserInfo findByUserId(String userId);
+@Repository
+public interface BoardRepository extends JpaRepository<Board, Integer> {
 
 }
